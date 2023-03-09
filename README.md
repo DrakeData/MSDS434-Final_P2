@@ -20,7 +20,7 @@ This repository contains code used for MSDS 434 Analytics Application Developmen
 ## Introduction
 As an avid user of Spotify (averaging about 80,000 listening minutes per year), I am always impressed by their large variety of music and their recommendation algorithm to create a perfect customized playlist just for me. With Spotify providing access to over 100 million tracks, I wanted to dig deeper to figure out what makes a track popular and how they end up in my playlists. To do this, I will be taking a deeper look in Spotify’s track data and will build a machine learning model to see if I can predict if a track will be a bop or a flop based off of its audio features.
 
-<img src="images/parks_and_rec_banger.gif" width="600" height="300" />
+<img src="images/parks_and_rec_banger.gif" width="800" height="300" />
 
 ## About the Data
 The Spotify track data set for this project was pulled [from Kaggle](https://www.kaggle.com/datasets/lehaknarnauli/spotify-datasets?select=tracks.csv) and it had over 580,000 unique tracks and their audio features.
@@ -76,11 +76,13 @@ It should then take you to the billing portal and you can view your projects and
 
 GCP and AWS can't charge you if they don't have a credit card linked to the project. It is best practice to unlink your credit card once you're done working in a project in the cloud as you do not want to accrue additional charges for resources that you are not necessarily using consciously. Note that you will need to relink your account back to the project if you plan on using it again.
 
-To **unlink** your project in GCP, go to "billing projects" and click the three dots under the 'Actions' columns. Then click 'Disable billing'. 
+To **unlink your account** from your project in GCP, go to "billing projects" and click the three dots under the 'Actions' columns. Then click 'Disable billing'. 
 
 ![gco_disable_billing](images/gcp4.png)
 
-To **relink** your account, you will do the same process but click link billing [COME BACK TO]
+To **relink your account** to your project in GCP, you will do the same process as above, but click 'Change billing' and select the billing account you would like to link with you project.
+
+![gco_relink_billing](images/gcp5.png)
 
 ### Step 2: Create BiqQuery Table
 1. In your GCP project, navagate to BigQuery. This will be our Data Lake that we will store the Spotify track data and the place we create a basic machine learning model using the ata.
