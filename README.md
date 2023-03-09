@@ -2,12 +2,25 @@
 This repository contains code used for MSDS 434 Analytics Application Development Final Project (Part II). The final project consists of building a cloud-native analytics application that is hosted on the Google Cloud Platform (GCP).
 
 ## Table of Contents
-COMING SOON
+  * [Introduction](#introduction)
+  * [About the Data](#about-the-data)
+    + [Audio Features](#audio-features)
+  * [Requirements](#requirements)
+  * [Architecture](#architecture)
+  * [Project Details](#project-details)
+    + [Step 1: Create Project in GCP](#step-1--create-project-in-gcp)
+    + [Step 2: Create BiqQuery Table](#step-2--create-biqquery-table)
+    + [Step 3: Gather the data and load it into GCP](#step-3--gather-the-data-and-load-it-into-gcp)
+    + [Step 4: Create training, evaluation, and prediction sets](#step-4--create-training--evaluation--and-prediction-sets)
+    + [Step 5: Build Machine Learning Model in BiqQuery](#step-5--build-machine-learning-model-in-biqquery)
+  * [Project Limitations](#project-limitations)
+  * [Future Enhancements](#future-enhancements)
+  * [Repository Info](#repository-info)
 
 ## Introduction
 As an avid user of Spotify (averaging about 80,000 listening minutes per year), I am always impressed by their large variety of music and their recommendation algorithm to create a perfect customized playlist just for me. With Spotify providing access to over 100 million tracks, I wanted to dig deeper to figure out what makes a track popular and how they end up in my playlists. To do this, I will be taking a deeper look in Spotify’s track data and will build a machine learning model to see if I can predict if a track will be a bop or a flop based off of its audio features.
 
-<img src="images/parks_and_rec_banger.gif" width="800" height="300" />
+<img src="images/parks_and_rec_banger.gif" width="600" height="300" />
 
 ## About the Data
 The Spotify track data set for this project was pulled [from Kaggle](https://www.kaggle.com/datasets/lehaknarnauli/spotify-datasets?select=tracks.csv) and it had over 580,000 unique tracks and their audio features.
@@ -44,6 +57,173 @@ Details are from [Spotify's API Dcoumentation](https://developer.spotify.com/doc
 ## Architecture
 
 ## Project Details
+For this project, we will be building an end-to-end process of gathering, preparing data for Machine Learning (ML) modeling using GCP, BigQueryg, and Python.
+
+### Step 1: Create Project in GCP
+The project I created is called 'msds434-nd-final'. You can viw your project(s) in GCP by clicking on the project box in the top left hand corner of the screen.
+
+![GCP_Project](images/gcp1.png)
+
+Make sure that you have a billing account connected to the project. To check you billing account(s) that are connected to your project, search "billing projects" in the search box and click on the first option.
+
+![GCP_Billing_Acct1](images/gcp2.png)
+
+It should then take you to the billing portal and you can view your projects and what billing account is connected.
+
+![GCP_Billing_Acct2](images/gcp3.png)
+
+**IMPORTANT: MAKE SURE TO UNLINK YOUR BILLING ACCOUNT FROM YOUR PROJECT WHEN YOU ARE NO LONGER USING IT**
+
+GCP and AWS can't charge you if they don't have a credit card linked to the project. It is best practice to unlink your credit card once you're done working in a project in the cloud as you do not want to accrue additional charges for resources that you are not necessarily using consciously. Note that you will need to relink your account back to the project if you plan on using it again.
+
+To **unlink** your project in GCP, go to "billing projects" and click the three dots under the 'Actions' columns. Then click 'Disable billing'. 
+
+![gco_disable_billing](images/gcp4.png)
+
+To **relink** your account, you will do the same process but click link billing [COME BACK TO]
+
+### Step 2: Create BiqQuery Table
+1. In your GCP project, navagate to BigQuery. This will be our Data Lake that we will store the Spotify track data and the place we create a basic machine learning model using the ata.
+2. Create a new data set.
+    - Next to your project name, click the three dots and click 'Create dataset'.
+    - My dataset name is 'spotify_track_data'.
+
+### Step 3: Gather the data and load it into GCP
+In [my Jupyter Notebook](https://github.com/DrakeData/MSDS434-Final_P2/blob/main/01-DataGathering.ipynb), I used the [Kaggle API](https://www.kaggle.com/docs/api) to pull the track CSV file using Python. You can do the same or you can export the data set directly [from Kaggle](https://www.kaggle.com/datasets/lehaknarnauli/spotify-datasets?select=tracks.csv) and load it into BigQuery manually.
+
+Code notes:
+- I performed very basic Exploratory Data Analysis (EDA) and noticed that there was a high correlation with danceability, energy and loudness when it comes down to track popularity. There was also a strong negative correlation with acousticness and track popularity.
+- I dropped all Nulls within the 'name' column.
+- I created a new column called 'bop_or_flop', where if a track's popularity is greater than or equal to 50, then it is a bop (1), else it is a flop (0).
+- Using [pandas_gbq](https://pandas-gbq.readthedocs.io/en/latest/), I directly loaded my Pandas Data Frame into my BigQuery dataset.
+    - table name is 'track_main'
+
+### Step 4: Create training, evaluation, and prediction sets
+To build and test a Machine Learning (ML) model, we first need to create a training, evaluation, and prediction sets. I ended up doing this in BigQuery in which I created a new table called 'track_tab' and used logic to to split_field and create a new column called 'dataframe' to identify my  training, evaluation, and prediction sets. My 'target' column is my original 'bop_or_flop' column; I called it 'target' here to make it easier to make the ML model.
+
+**Code used to build table:**
+```
+CREATE OR REPLACE TABLE `spotify_track_data.track_tab` AS
+SELECT duration_ms
+    , energy
+    , danceability
+    , loudness
+    , speechiness
+    , acousticness
+    , instrumentalness
+    , liveness
+    , valence
+    , tempo
+    , time_signature
+    , target,
+CASE
+  WHEN split_field < 0.8 THEN 'training'
+  WHEN split_field = 0.8 THEN 'evaluation'
+  WHEN split_field > 0.8 THEN 'prediction'
+ END AS dataframe
+from (
+  SELECT duration_ms
+    , energy
+    , danceability
+    , loudness
+    , speechiness
+    , acousticness
+    , instrumentalness
+    , liveness
+    , valence
+    , tempo
+    , time_signature
+    , bop_or_flop AS target
+    , ROUND(ABS(RAND()), 1) AS split_field
+  FROM `spotify_track_data.track_main`
+);
+```
+
+**Code used to evaluate table:**
+```
+SELECT dataframe
+    , target
+    , count(*) AS count
+FROM `spotify_track_data.track_tab`
+GROUP BY dataframe, target
+ORDER BY dataframe
+;
+```
+
+**Output:**
+
+![bq_output1](images/bq1.PNG)
+
+### Step 5: Build Machine Learning Model in BiqQuery
+One perk of using BigQuery as your database is that you can use ML techniques directly within it. This functions makes ML easily assessable and is ready to go right out of the box. There is also a low barrier of entry since the only language you need to know to use ML in BigQuery is SQL.
+
+For my ML model, I used logistic regression to try to predict if a track is a bop (1) or a flow (0).
+
+**Code used to build model**
+```
+-- #### CREATE MODEL ####
+CREATE or REPLACE MODEL `spotify_track_data.bopflop_model`
+OPTIONS(model_type='logistic_reg',
+      auto_class_weights=TRUE,
+      input_label_cols=['target']
+      ) AS
+SELECT *
+  EXCEPT(dataframe)
+FROM  `msds434-nd-final.spotify_track_data.track_tab`
+WHERE dataframe = 'training'
+;
+```
+The model took a couple minutes to run ; now let's evaluate how it did.
+
+**Code used to evaluate model:**
+```
+-- EVALUATE
+SELECT *
+FROM ML.EVALUATE(MODEL `spotify_track_data.bopflop_model`,
+  (
+    SELECT *
+    FROM `msds434-nd-final.spotify_track_data.track_tab`
+    WHERE dataframe = 'evaluation'
+  )
+);
+```
+**Output:**
+
+![ml_eval](images/ml1.PNG)
+
+As you can see, my model has a low accuracy score of 52.7% and a high recall score (82.5%) and low precision score (19.2%). I suspect that this is because I did not do any feature engineering on the data set and ultimatly just ran it as is. In the future, I would dig deeper into the data set to perform feature engineering. 
+
+Another option is to run the dataset through AutoML [LOOK INTO].
+
+**Code used to make prediction:**
+```
+SELECT *
+FROM ML.PREDICT(MODEL `spotify_track_data.bopflop_model`,
+  (
+    SELECT *
+    FROM `msds434-nd-final.spotify_track_data.track_tab`
+    WHERE dataframe = 'prediction'
+  )
+);
+```
+
+To view more model information, you can run these queries:
+```
+-- #### MODEL INFO ####
+-- Training info  
+SELECT *
+FROM ML.TRAINING_INFO(MODEL `spotify_track_data.bopflop_model`)
+
+
+-- Feature info
+SELECT *
+FROM ML.FEATURE_INFO(MODEL `spotify_track_data.bopflop_model`)
+
+
+-- Check model weight
+SELECT *
+FROM ML.WEIGHTS(MODEL `spotify_track_data.bopflop_model`)
+```
 
 ## Project Limitations
 
