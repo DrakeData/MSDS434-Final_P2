@@ -9,10 +9,10 @@ This repository contains code used for MSDS 434 Analytics Application Developmen
   * [Architecture](#architecture)
   * [Project Details](#project-details)
     + [Step 1: Create Project in GCP](#step-1--create-project-in-gcp)
-    + [Step 2: Create BiqQuery Table](#step-2--create-biqquery-table)
+    + [Step 2: Create BigQuery Table](#step-2--create-bigquery-table)
     + [Step 3: Gather the data and load it into GCP](#step-3--gather-the-data-and-load-it-into-gcp)
     + [Step 4: Create training, evaluation, and prediction sets](#step-4--create-training--evaluation--and-prediction-sets)
-    + [Step 5: Build Machine Learning Model in BiqQuery](#step-5--build-machine-learning-model-in-biqquery)
+    + [Step 5: Build Machine Learning Model in BigQuery](#step-5--build-machine-learning-model-in-bigquery)
   * [Project Limitations](#project-limitations)
   * [Future Enhancements](#future-enhancements)
   * [Repository Info](#repository-info)
@@ -84,7 +84,7 @@ To **relink your account** to your project in GCP, you will do the same process 
 
 ![gco_relink_billing](images/gcp5.png)
 
-### Step 2: Create BiqQuery Table
+### Step 2: Create BigQuery Table
 1. In your GCP project, navagate to BigQuery. This will be our Data Lake that we will store the Spotify track data and the place we create a basic machine learning model using the ata.
 2. Create a new data set.
     - Next to your project name, click the three dots and click 'Create dataset'.
@@ -156,7 +156,7 @@ ORDER BY dataframe
 
 ![bq_output1](images/bq1.PNG)
 
-### Step 5: Build Machine Learning Model in BiqQuery
+### Step 5: Build Machine Learning Model in BigQuery
 One perk of using BigQuery as your database is that you can use ML techniques directly within it. This functions makes ML easily assessable and is ready to go right out of the box. There is also a low barrier of entry since the only language you need to know to use ML in BigQuery is SQL.
 
 For my ML model, I used logistic regression to try to predict if a track is a bop (1) or a flow (0).
@@ -175,7 +175,7 @@ FROM  `msds434-nd-final.spotify_track_data.track_tab`
 WHERE dataframe = 'training'
 ;
 ```
-The model took a couple minutes to run ; now let's evaluate how it did.
+The model took a couple minutes to run; now let's evaluate how it did.
 
 **Code used to evaluate model:**
 ```
@@ -193,9 +193,7 @@ FROM ML.EVALUATE(MODEL `spotify_track_data.bopflop_model`,
 
 ![ml_eval](images/ml1.PNG)
 
-As you can see, my model has a low accuracy score of 52.7% and a high recall score (82.5%) and low precision score (19.2%). I suspect that this is because I did not do any feature engineering on the data set and ultimatly just ran it as is. In the future, I would dig deeper into the data set to perform feature engineering. 
-
-Another option is to run the dataset through AutoML [LOOK INTO].
+As you can see, my model has a low accuracy score of 52.7% and a high recall score (82.5%) and low precision score (19.2%). I suspect that this is because I did not do any feature engineering on the data set and ultimatly just ran it as is. In the future, I would dig deeper into the data set to perform feature engineering.
 
 **Code used to make prediction:**
 ```
@@ -226,6 +224,63 @@ FROM ML.FEATURE_INFO(MODEL `spotify_track_data.bopflop_model`)
 SELECT *
 FROM ML.WEIGHTS(MODEL `spotify_track_data.bopflop_model`)
 ```
+
+Another option is to run the dataset through AutoML. A benifit of using AutoML is that it lowers the cost of ownership (TCO) in a couple different ways, one way is that it automates feature engineering, which transforming data into features that better represent the underlying problem. AutoML also comes out-of-the-box with security and compliance built into it. It does take more time, money, and resources though to run AutoML, so that is something to keep in mind.
+
+Since my training dataset had about 40,000 veriables, I decided to run AutoML to see if I can build a better model.
+
+**Code used to build model:**
+```
+-- #### CREATE AUTOML MODEL ####
+CREATE or REPLACE MODEL `spotify_track_data.bopflop_AutoML`
+OPTIONS(model_type='AUTOML_CLASSIFIER',
+      input_label_cols=['target'],
+      OPTIMIZATION_OBJECTIVE = 'MAXIMIZE_AU_ROC'
+      ) AS
+SELECT *
+  EXCEPT(dataframe)
+FROM  `msds434-nd-final.spotify_track_data.track_tab`
+WHERE dataframe = 'training'
+;
+```
+The model took 1 hour and 34 minutes to run and cost about $7 to run [look into cost].
+
+![auto_ml_rt](images/automl1.PNG)
+
+Time to evaluate the AutoML model
+
+**Code used to evaluate AutoML model:**
+```
+-- EVALUATE
+SELECT *
+FROM ML.EVALUATE(MODEL `spotify_track_data.bopflop_AutoML`,
+  (
+    SELECT *
+    FROM `msds434-nd-final.spotify_track_data.track_tab`
+    WHERE dataframe = 'evaluation'
+  )
+);
+```
+**Output:**
+![auto_ml_op](images/automl2.PNG)
+
+As you can see, the AutoML model performed much better than my original model with a 87.3% accuracy score, 57.6% precision score and 8.5% recall score. Needless to say, I will be using this model.
+
+**Code used to make prediction:**
+```
+SELECT *
+FROM ML.PREDICT(MODEL `spotify_track_data.bopflop_AutoML`,
+  (
+    SELECT *
+    FROM `msds434-nd-final.spotify_track_data.track_tab`
+    WHERE dataframe = 'prediction'
+  )
+);
+```
+
+### Step 6: Deploy frontend application
+
+##
 
 ## Project Limitations
 
