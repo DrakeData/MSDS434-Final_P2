@@ -10,7 +10,6 @@ This repository contains code used for MSDS 434 Analytics Application Developmen
 - [About the Data](#about-the-data)
   * [Audio Features](#audio-features)
 - [Requirements](#requirements)
-- [Architecture](#architecture)
 - [Project Details](#project-details)
   * [Step 1: Create Project in GCP](#step-1--create-project-in-gcp)
   * [Step 2: Create BigQuery Table](#step-2--create-bigquery-table)
@@ -59,8 +58,6 @@ Details are from [Spotify's API Dcoumentation](https://developer.spotify.com/doc
 - Access to [Google Cloud Platform (GCP)](https://cloud.google.com/)
 - If using Python to download the Kaggle data set, a [Kaggle API Key](https://www.kaggle.com/docs/api) is needed.
     - Make sure to save the API key in 'C:\Users\USER_NAME\.kaggle' directory.
-
-## Architecture
 
 ## Project Details
 For this project, we will be building an end-to-end process of gathering, preparing data for Machine Learning (ML) modeling using GCP, BigQueryg, and Python.
