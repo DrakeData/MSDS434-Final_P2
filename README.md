@@ -4,20 +4,22 @@ This repository contains code used for MSDS 434 Analytics Application Developmen
 **Link to app deployed on GCP: https://msds-434-final-p-2-z2dhbu74la-uc.a.run.app/**
 
 ## Table of Contents
-  * [Introduction](#introduction)
-  * [About the Data](#about-the-data)
-    + [Audio Features](#audio-features)
-  * [Requirements](#requirements)
-  * [Architecture](#architecture)
-  * [Project Details](#project-details)
-    + [Step 1: Create Project in GCP](#step-1--create-project-in-gcp)
-    + [Step 2: Create BigQuery Table](#step-2--create-bigquery-table)
-    + [Step 3: Gather the data and load it into GCP](#step-3--gather-the-data-and-load-it-into-gcp)
-    + [Step 4: Create training, evaluation, and prediction sets](#step-4--create-training--evaluation--and-prediction-sets)
-    + [Step 5: Build Machine Learning Model in BigQuery](#step-5--build-machine-learning-model-in-bigquery)
-  * [Project Limitations](#project-limitations)
-  * [Future Enhancements](#future-enhancements)
-  * [Repository Info](#repository-info)
+- [Introduction](#introduction)
+- [About the Data](#about-the-data)
+  * [Audio Features](#audio-features)
+- [Requirements](#requirements)
+- [Architecture](#architecture)
+- [Project Details](#project-details)
+  * [Step 1: Create Project in GCP](#step-1--create-project-in-gcp)
+  * [Step 2: Create BigQuery Table](#step-2--create-bigquery-table)
+  * [Step 3: Gather the data and load it into GCP](#step-3--gather-the-data-and-load-it-into-gcp)
+  * [Step 4: Create training, evaluation, and prediction sets](#step-4--create-training--evaluation--and-prediction-sets)
+  * [Step 5: Build Machine Learning Model in BigQuery](#step-5--build-machine-learning-model-in-bigquery)
+  * [Step 6: Deploy frontend application](#step-6--deploy-frontend-application)
+  * [Step 7: Setup monitoring dashbaord](#step-7--setup-monitoring-dashbaord)
+- [Project Limitations](#project-limitations)
+- [Future Enhancements](#future-enhancements)
+- [Repository Info](#repository-info)
 
 ## Introduction
 As an avid user of Spotify (averaging about 80,000 listening minutes per year), I am always impressed by their large variety of music and their recommendation algorithm to create a perfect customized playlist just for me. With Spotify providing access to over 100 million tracks, I wanted to dig deeper to figure out what makes a track popular and how they end up in my playlists. To do this, I will be taking a deeper look in Spotify’s track data and will build a machine learning model to see if I can predict if a track will be a bop or a flop based off of its audio features.
