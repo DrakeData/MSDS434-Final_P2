@@ -280,7 +280,7 @@ FROM ML.PREDICT(MODEL `spotify_track_data.bopflop_AutoML`,
 
 ### Step 6: Deploy frontend application
 
-##
+### Step 7: Setup monitoring dashbaord
 
 ## Project Limitations
 
