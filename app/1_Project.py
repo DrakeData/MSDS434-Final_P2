@@ -60,49 +60,48 @@ with st.container():
     volume, and popularity. The analysis involved the use of visualizations to identify patterns and trends in the data, and to gain a better understanding of the underlying factors that 
     contribute to the success of a song on the Spotify platform.''')
 
-    tab1, tab2, tab3 = st.tabs(["Correlations", "Energy Vs. Loudness", "Popularity Vs. Acousticness"])
-    with tab1:
-        left_column, right_column = st.columns(2)
-        with left_column:
-            st.subheader("Correlations")
-            st.markdown('''To investigate correlations between different attributes of the Spotify data set, a correlation matrix was computed and visualized using heatmaps. 
-            This allowed for the identification of strong positive or negative relationships between different attributes, which provided insights into how certain characteristics may 
-            impact the popularity of a song.
-            ''')
-            st.markdown('''**Observatioins:**''')
-            st.markdown('''- Strong possitive correlation with energy and volume''')
-            st.markdown('''- Negative correlation with popularity and acousticness''')
-        with right_column:
-             st.image(img_heatmap)
     
-    with tab2:
-        left_column, right_column = st.columns(2)
-        with left_column:
-            st.subheader("Energy Vs. Loudness")
-            st.markdown('''In the Spotify data set, there is a strong positive correlation between Energy and Loudness, indicating that songs with higher energy tend to also be louder. 
-            This correlation suggests that these two attributes are closely related and may play an important role in the success of a song on the Spotify platform.''')
+    left_column, right_column = st.columns(2)
+    with left_column:
+        st.subheader("Correlations")
+        st.markdown('''To investigate correlations between different attributes of the Spotify data set, a correlation matrix was computed and visualized using heatmaps. 
+        This allowed for the identification of strong positive or negative relationships between different attributes, which provided insights into how certain characteristics may 
+        impact the popularity of a song.
+        ''')
+        st.markdown('''**Observatioins:**''')
+        st.markdown('''- Strong possitive correlation with energy and volume''')
+        st.markdown('''- Negative correlation with popularity and acousticness''')
+    with right_column:
+            st.image(img_heatmap)
+    
+    
+    left_column, right_column = st.columns(2)
+    with left_column:
+        st.subheader("Energy Vs. Loudness")
+        st.markdown('''In the Spotify data set, there is a strong positive correlation between Energy and Loudness, indicating that songs with higher energy tend to also be louder. 
+        This correlation suggests that these two attributes are closely related and may play an important role in the success of a song on the Spotify platform.''')
 
-            st.markdown('''**Note:** To better visualize the correlation between two variables in the Spotify data set, the data set was reduced to 2346 samples by randomly selecting 
-            data points from the original data set. This was done to make the scatter plot less cluttered and to help highlight any trends or patterns that may 
-            exist between the two variables being analyzed.
-            ''')
-        with right_column:
-            st.image(img_scatter1)
+        st.markdown('''**Note:** To better visualize the correlation between two variables in the Spotify data set, the data set was reduced to 2346 samples by randomly selecting 
+        data points from the original data set. This was done to make the scatter plot less cluttered and to help highlight any trends or patterns that may 
+        exist between the two variables being analyzed.
+        ''')
+    with right_column:
+        st.image(img_scatter1)
 
-    with tab3:
-        left_column, right_column = st.columns(2)
-        with left_column:
-            st.subheader("Popularity Vs. Acousticness")
-            st.markdown('''There is a negative correlation between popularity and acousticness, which suggests that songs with high levels of acousticness are less likely to be 
-            popular on the platform. This relationship may be due to the fact that highly acoustic songs may not be as appealing to the general public, who may prefer more upbeat 
-            and energetic tracks.''')
+    
+    left_column, right_column = st.columns(2)
+    with left_column:
+        st.subheader("Popularity Vs. Acousticness")
+        st.markdown('''There is a negative correlation between popularity and acousticness, which suggests that songs with high levels of acousticness are less likely to be 
+        popular on the platform. This relationship may be due to the fact that highly acoustic songs may not be as appealing to the general public, who may prefer more upbeat 
+        and energetic tracks.''')
 
-            st.markdown('''**Note:** To better visualize the correlation between two variables in the Spotify data set, the data set was reduced to 2346 samples by randomly selecting 
-            data points from the original data set. This was done to make the scatter plot less cluttered and to help highlight any trends or patterns that may 
-            exist between the two variables being analyzed.
-            ''')
-        with right_column:
-            st.image(img_scatter2)
+        st.markdown('''**Note:** To better visualize the correlation between two variables in the Spotify data set, the data set was reduced to 2346 samples by randomly selecting 
+        data points from the original data set. This was done to make the scatter plot less cluttered and to help highlight any trends or patterns that may 
+        exist between the two variables being analyzed.
+        ''')
+    with right_column:
+        st.image(img_scatter2)
 
 with st.container():
     st.write("---")

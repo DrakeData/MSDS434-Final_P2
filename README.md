@@ -3,6 +3,8 @@ This repository contains code used for MSDS 434 Analytics Application Developmen
 
 **Link to app deployed on GCP: https://msds-434-final-p-2-z2dhbu74la-uc.a.run.app/**
 
+[![final_project_video](https://cdn.loom.com/sessions/thumbnails/3cb6e0d582fb4f98946dca54bd4f6cc1-with-play.gif)](https://www.loom.com/share/3cb6e0d582fb4f98946dca54bd4f6cc1)
+
 ## Table of Contents
 - [Introduction](#introduction)
 - [About the Data](#about-the-data)
