@@ -1,6 +1,8 @@
 # MSDS 434 Final (Part II)
 This repository contains code used for MSDS 434 Analytics Application Development Final Project (Part II). The final project consists of building a cloud-native analytics application that is hosted on the Google Cloud Platform (GCP).
 
+**Link to app deployed on GCP: https://msds-434-final-p-2-z2dhbu74la-uc.a.run.app/**
+
 ## Table of Contents
   * [Introduction](#introduction)
   * [About the Data](#about-the-data)
@@ -279,14 +281,33 @@ FROM ML.PREDICT(MODEL `spotify_track_data.bopflop_AutoML`,
 ```
 
 ### Step 6: Deploy frontend application
+To present my EDA findings and my model's success, I created a streamlit app and deployed it on GCP's Cloud Run. I used Visual Studio Code as my GUI, Docker as my environemnt container, and Google Cloud SDK to push my app from my local machine to my cloud enviornment.
+
+![app1](images/app1.PNG)
+
+Helpful resources:
+- [Install the Cloud Code for VS Code extension](https://cloud.google.com/code/docs/vscode/install)
+- [YouTube - How to Deploy Streamlit Apps to GCP App Engine](https://www.youtube.com/watch?v=03KgXhg-voY)
 
 ### Step 7: Setup monitoring dashbaord
+GCP has a built in monitoring tool that allows you to build your own monitoring dashboard. You are also able to set up alerts to notify you if your application goes over a specific limit that you can set.
+
+I created a simple dashboard to watch the CPU usage and count of request to my Spotify Tracks - Bop or Flop application. Overtime, I would build this out to also monitor BigQuery and my project's expenses.
+
+![monitoring](images/monitoring1.PNG)
 
 ## Project Limitations
+Due to being on a student budget, I decided to errored on the side of caution of limiting my expenses, which affected our project’s performance. Please see 'Future Enhancements' for what we would want to do next to enhance what we have built.
 
 ## Future Enhancements
+- Set up a weekly script to collect new Spotify tracks and append the data to the existing BigQuery table.
+- Perform more in-depth feature engineering and tune the model for higher accuracy.
+- Use Spotify's API OAuth 2.0 authorization framework to allow users to pull their own Spotify data and see if my model can predict if their tracks are a bop or a flop.
+- Enhance the application to have more interactive graphs and present more useful insight.
+- Use GitHub Actions for continuous integration and continuous delivery (CI/CD).
 
 ## Repository Info
 Created by: [Nicholas Drake](https://github.com/DrakeData)
 
 Created Date: 03/06/2023
+

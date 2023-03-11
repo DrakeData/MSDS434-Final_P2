@@ -33,7 +33,7 @@ with st.container():
     st.title("Spotify Tracks - Bop or Flop?")
     st.markdown('''Spotify, the popular music streaming platform, not only provides access to a vast library of songs but also offers valuable track data that includes information on attributes 
     such as popularity, tempo, duration, and key. One of the most intriguing uses of Spotify's track data is in the field of machine learning, where it can be used to train models to predict 
-    the success of a song. For this project, I analysed Spotify's track attributes [from Kaggle](https://www.kaggle.com/datasets/lehaknarnauli/spotify-datasets?select=tracks.csv) to develop an
+    the success of a song. For this project, I analyzed  Spotify's track attributes [from Kaggle](https://www.kaggle.com/datasets/lehaknarnauli/spotify-datasets?select=tracks.csv) to develop an
     algorithm that can classify songs as either "bops" or "flops" based on their characteristics. 
     ''')
 
@@ -93,7 +93,7 @@ with st.container():
         left_column, right_column = st.columns(2)
         with left_column:
             st.subheader("Popularity Vs. Acousticness")
-            st.markdown('''there is a negative correlation between Popularity and Acousticness, which suggests that songs with high levels of acousticness are less likely to be 
+            st.markdown('''There is a negative correlation between popularity and acousticness, which suggests that songs with high levels of acousticness are less likely to be 
             popular on the platform. This relationship may be due to the fact that highly acoustic songs may not be as appealing to the general public, who may prefer more upbeat 
             and energetic tracks.''')
 
