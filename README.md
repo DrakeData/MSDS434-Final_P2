@@ -17,7 +17,7 @@ This repository contains code used for MSDS 434 Analytics Application Developmen
   * [Step 4: Create training, evaluation, and prediction sets](#step-4--create-training--evaluation--and-prediction-sets)
   * [Step 5: Build Machine Learning Model in BigQuery](#step-5--build-machine-learning-model-in-bigquery)
   * [Step 6: Deploy frontend application](#step-6--deploy-frontend-application)
-  * [Step 7: Setup monitoring dashbaord](#step-7--setup-monitoring-dashbaord)
+  * [Step 7: Setup monitoring dashboard](#step-7--setup-monitoring-dashboard)
 - [Project Limitations](#project-limitations)
 - [Future Enhancements](#future-enhancements)
 - [Repository Info](#repository-info)
@@ -60,10 +60,10 @@ Details are from [Spotify's API Dcoumentation](https://developer.spotify.com/doc
     - Make sure to save the API key in 'C:\Users\USER_NAME\.kaggle' directory.
 
 ## Project Details
-For this project, we will be building an end-to-end process of gathering, preparing data for Machine Learning (ML) modeling using GCP, BigQueryg, and Python.
+For this project, we will be building an end-to-end process of gathering, preparing data for Machine Learning (ML) modeling using GCP, BigQuery, and Python.
 
 ### Step 1: Create Project in GCP
-The project I created is called 'msds434-nd-final'. You can viw your project(s) in GCP by clicking on the project box in the top left hand corner of the screen.
+The project I created is called 'msds434-nd-final'. You can view your project(s) in GCP by clicking on the project box in the top left hand corner of the screen.
 
 ![GCP_Project](images/gcp1.png)
 
@@ -88,7 +88,7 @@ To **relink your account** to your project in GCP, you will do the same process 
 ![gco_relink_billing](images/gcp5.png)
 
 ### Step 2: Create BigQuery Table
-1. In your GCP project, navagate to BigQuery. This will be our Data Lake that we will store the Spotify track data and the place we create a basic machine learning model using the ata.
+1. In your GCP project, navagate to BigQuery. This will be our Data Lake that we will store the Spotify track data and the place we create a basic machine learning model from the data.
 2. Create a new data set.
     - Next to your project name, click the three dots and click 'Create dataset'.
     - My dataset name is 'spotify_track_data'.
@@ -104,7 +104,7 @@ Code notes:
     - table name is 'track_main'
 
 ### Step 4: Create training, evaluation, and prediction sets
-To build and test a Machine Learning (ML) model, we first need to create a training, evaluation, and prediction sets. I ended up doing this in BigQuery in which I created a new table called 'track_tab' and used logic to to split_field and create a new column called 'dataframe' to identify my  training, evaluation, and prediction sets. My 'target' column is my original 'bop_or_flop' column; I called it 'target' here to make it easier to make the ML model.
+To build and test a Machine Learning (ML) model, we first need to create a training, evaluation, and prediction sets. I ended up doing this in BigQuery in which I created a new table called 'track_tab' and used logic to split_field and create a new column called 'dataframe' to identify my  training, evaluation, and prediction sets. My 'target' column is my original 'bop_or_flop' column; I called it 'target' here to make it easier to make the ML model.
 
 **Code used to build table:**
 ```
@@ -160,7 +160,7 @@ ORDER BY dataframe
 ![bq_output1](images/bq1.PNG)
 
 ### Step 5: Build Machine Learning Model in BigQuery
-One perk of using BigQuery as your database is that you can use ML techniques directly within it. This functions makes ML easily assessable and is ready to go right out of the box. There is also a low barrier of entry since the only language you need to know to use ML in BigQuery is SQL.
+One perk of using BigQuery as your database is that you can use ML techniques directly within it. This function makes ML easily assessable and is ready to go right out of the box. There is also a low barrier of entry since the only language you need to know to use ML in BigQuery is SQL.
 
 For my ML model, I used logistic regression to try to predict if a track is a bop (1) or a flow (0).
 
@@ -196,7 +196,7 @@ FROM ML.EVALUATE(MODEL `spotify_track_data.bopflop_model`,
 
 ![ml_eval](images/ml1.PNG)
 
-As you can see, my model has a low accuracy score of 52.7% and a high recall score (82.5%) and low precision score (19.2%). I suspect that this is because I did not do any feature engineering on the data set and ultimatly just ran it as is. In the future, I would dig deeper into the data set to perform feature engineering.
+As you can see, my model has a low accuracy score of 52.7% and a high recall score (82.5%) and low precision score (19.2%). I suspect that this is because I did not do any feature engineering on the data set and ultimately just ran it as is. In the future, I would dig deeper into the data set to perform feature engineering.
 
 **Code used to make prediction:**
 ```
@@ -228,9 +228,9 @@ SELECT *
 FROM ML.WEIGHTS(MODEL `spotify_track_data.bopflop_model`)
 ```
 
-Another option is to run the dataset through AutoML. A benifit of using AutoML is that it lowers the cost of ownership (TCO) in a couple different ways, one way is that it automates feature engineering, which transforming data into features that better represent the underlying problem. AutoML also comes out-of-the-box with security and compliance built into it. It does take more time, money, and resources though to run AutoML, so that is something to keep in mind.
+Another option is to run the dataset through AutoML. A benefit of using AutoML is that it lowers the cost of ownership (TCO) in a couple different ways, one way is that it automates feature engineering, which transforming data into features that better represent the underlying problem. AutoML also comes out-of-the-box with security and compliance built into it. It does take more time, money, and resources though to run AutoML, so that is something to keep in mind.
 
-Since my training dataset had about 40,000 veriables, I decided to run AutoML to see if I can build a better model.
+Since my training dataset had about 40,000 variables, I decided to run AutoML to see if I can build a better model.
 
 **Code used to build model:**
 ```
@@ -282,7 +282,7 @@ FROM ML.PREDICT(MODEL `spotify_track_data.bopflop_AutoML`,
 ```
 
 ### Step 6: Deploy frontend application
-To present my EDA findings and my model's success, I created a streamlit app and deployed it on GCP's Cloud Run. I used Visual Studio Code as my GUI, Docker as my environemnt container, and Google Cloud SDK to push my app from my local machine to my cloud enviornment.
+To present my EDA findings and my model's success, I created a streamlit app and deployed it on GCP's Cloud Run. I used Visual Studio Code as my GUI, Docker as my environment container, and Google Cloud SDK to push my app from my local machine to my cloud environment.
 
 ![app1](images/app1.PNG)
 
@@ -290,8 +290,8 @@ Helpful resources:
 - [Install the Cloud Code for VS Code extension](https://cloud.google.com/code/docs/vscode/install)
 - [YouTube - How to Deploy Streamlit Apps to GCP App Engine](https://www.youtube.com/watch?v=03KgXhg-voY)
 
-### Step 7: Setup monitoring dashbaord
-GCP has a built in monitoring tool that allows you to build your own monitoring dashboard. You are also able to set up alerts to notify you if your application goes over a specific limit that you can set.
+### Step 7: Setup monitoring dashboard
+GCP has a built-in  monitoring tool that allows you to build your own monitoring dashboard. You are also able to set up alerts to notify you if your application goes over a specific limit that you can set.
 
 I created a simple dashboard to watch the CPU usage and count of request to my Spotify Tracks - Bop or Flop application. Overtime, I would build this out to also monitor BigQuery and my project's expenses.
 
