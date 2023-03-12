@@ -23,12 +23,12 @@ This repository contains code used for MSDS 434 Analytics Application Developmen
 - [Repository Info](#repository-info)
 
 ## Introduction
-As an avid user of Spotify (averaging about 80,000 listening minutes per year), I am always impressed by their large variety of music and their recommendation algorithm to create a perfect customized playlist just for me. With Spotify providing access to over 100 million tracks, I wanted to dig deeper to figure out what makes a track popular and how they end up in my playlists. To do this, I will be taking a deeper look in Spotify’s track data and will build a machine learning model to see if I can predict if a track will be a bop or a flop based off of its audio features.
+As an avid user of Spotify (averaging about 80,000 listening minutes per year), I am always impressed by their large variety of music and their recommendation algorithm to create a perfect customized playlist just for me. With Spotify providing access to over 100 million tracks, I wanted to dig deeper to figure out what makes a track popular and how they end up in my playlists. To do this, I will be taking a deeper look into Spotify’s track data and will build a machine learning model to see if I can predict if a track will be a bop or a flop based off of its audio features.
 
 <img src="images/parks_and_rec_banger.gif" width="800" height="300" />
 
 ## About the Data
-The Spotify track data set for this project was pulled [from Kaggle](https://www.kaggle.com/datasets/lehaknarnauli/spotify-datasets?select=tracks.csv) and it had over 580,000 unique tracks and their audio features.
+The Spotify track data set for this project was pulled [from Kaggle](https://www.kaggle.com/datasets/lehaknarnauli/spotify-datasets?select=tracks.csv) and it has over 580,000 unique tracks and their audio features.
 
 ### Audio Features
 Details are from [Spotify's API Dcoumentation](https://developer.spotify.com/documentation/web-api/reference/#/operations/get-several-audio-features)
@@ -60,18 +60,18 @@ Details are from [Spotify's API Dcoumentation](https://developer.spotify.com/doc
     - Make sure to save the API key in 'C:\Users\USER_NAME\.kaggle' directory.
 
 ## Project Details
-For this project, we will be building an end-to-end process of gathering, preparing data for Machine Learning (ML) modeling using GCP, BigQuery, and Python.
+For this project, we will be building an end-to-end process of gathering data, preparing it for Machine Learning (ML) modeling on BigQuery, and Python to deploy an application to share my results.
 
 ### Step 1: Create Project in GCP
 The project I created is called 'msds434-nd-final'. You can view your project(s) in GCP by clicking on the project box in the top left hand corner of the screen.
 
 ![GCP_Project](images/gcp1.png)
 
-Make sure that you have a billing account connected to the project. To check you billing account(s) that are connected to your project, search "billing projects" in the search box and click on the first option.
+Make sure that you have a billing account connected to the project. To check your billing account(s) that are connected to your project, search "billing projects" in the search box and click on the first option.
 
 ![GCP_Billing_Acct1](images/gcp2.png)
 
-It should then take you to the billing portal and you can view your projects and what billing account is connected.
+It will then take you to the billing portal and you can view your projects and what billing account is connected.
 
 ![GCP_Billing_Acct2](images/gcp3.png)
 
@@ -79,32 +79,32 @@ It should then take you to the billing portal and you can view your projects and
 
 GCP and AWS can't charge you if they don't have a credit card linked to the project. It is best practice to unlink your credit card once you're done working in a project in the cloud as you do not want to accrue additional charges for resources that you are not necessarily using consciously. Note that you will need to relink your account back to the project if you plan on using it again.
 
-To **unlink your account** from your project in GCP, go to "billing projects" and click the three dots under the 'Actions' columns. Then click 'Disable billing'. 
+To **unlink your billing account** from your project in GCP, go to "billing projects" and click the three dots under the 'Actions' columns. Then click 'Disable billing'.
 
 ![gco_disable_billing](images/gcp4.png)
 
-To **relink your account** to your project in GCP, you will do the same process as above, but click 'Change billing' and select the billing account you would like to link with you project.
+To **relink your billing account** to your project in GCP, you will do the same process as above, but click 'Change billing' and select the billing account you would like to link with your project.
 
 ![gco_relink_billing](images/gcp5.png)
 
 ### Step 2: Create BigQuery Table
-1. In your GCP project, navagate to BigQuery. This will be our Data Lake that we will store the Spotify track data and the place we create a basic machine learning model from the data.
+1. In your GCP project, navigate to BigQuery. This will be our Data Lake that we will store the Spotify track data and the place we create a basic machine learning model from the data.
 2. Create a new data set.
-    - Next to your project name, click the three dots and click 'Create dataset'.
-    - My dataset name is 'spotify_track_data'.
+    - Next to your project name, click the three dots and click 'Create data set'.
+    - My data set name is 'spotify_track_data'.
 
 ### Step 3: Gather the data and load it into GCP
 In [my Jupyter Notebook](https://github.com/DrakeData/MSDS434-Final_P2/blob/main/01-DataGathering.ipynb), I used the [Kaggle API](https://www.kaggle.com/docs/api) to pull the track CSV file using Python. You can do the same or you can export the data set directly [from Kaggle](https://www.kaggle.com/datasets/lehaknarnauli/spotify-datasets?select=tracks.csv) and load it into BigQuery manually.
 
 Code notes:
-- I performed very basic Exploratory Data Analysis (EDA) and noticed that there was a high correlation with danceability, energy and loudness when it comes down to track popularity. There was also a strong negative correlation with acousticness and track popularity.
+- I performed very basic Exploratory Data Analysis (EDA) and noticed that there was a high positive  correlation with energy and loudness and there was a strong negative correlation with acousticness and track popularity.
 - I dropped all Nulls within the 'name' column.
 - I created a new column called 'bop_or_flop', where if a track's popularity is greater than or equal to 50, then it is a bop (1), else it is a flop (0).
-- Using [pandas_gbq](https://pandas-gbq.readthedocs.io/en/latest/), I directly loaded my Pandas Data Frame into my BigQuery dataset.
+- Using the python library [pandas_gbq](https://pandas-gbq.readthedocs.io/en/latest/), I directly loaded my Pandas Data Frame into my BigQuery data set.
     - table name is 'track_main'
 
 ### Step 4: Create training, evaluation, and prediction sets
-To build and test a Machine Learning (ML) model, we first need to create a training, evaluation, and prediction sets. I ended up doing this in BigQuery in which I created a new table called 'track_tab' and used logic to split_field and create a new column called 'dataframe' to identify my  training, evaluation, and prediction sets. My 'target' column is my original 'bop_or_flop' column; I called it 'target' here to make it easier to make the ML model.
+To build and test a Machine Learning (ML) model, we first need to create a training, evaluation, and prediction sets. I ended up doing this in BigQuery in which I created a new table called 'track_tab' and used logic to split_field and create a new column called 'dataframe' to identify my training, evaluation, and prediction sets. My 'target' column is my original 'bop_or_flop' column; I called it 'target' here to make it easier to reference when building the ML model.
 
 **Code used to build table:**
 ```
@@ -162,7 +162,7 @@ ORDER BY dataframe
 ### Step 5: Build Machine Learning Model in BigQuery
 One perk of using BigQuery as your database is that you can use ML techniques directly within it. This function makes ML easily assessable and is ready to go right out of the box. There is also a low barrier of entry since the only language you need to know to use ML in BigQuery is SQL.
 
-For my ML model, I used logistic regression to try to predict if a track is a bop (1) or a flow (0).
+For my ML model, I used logistic regression to try to predict if a track is a bop (1) or a flop (0).
 
 **Code used to build model**
 ```
@@ -196,7 +196,7 @@ FROM ML.EVALUATE(MODEL `spotify_track_data.bopflop_model`,
 
 ![ml_eval](images/ml1.PNG)
 
-As you can see, my model has a low accuracy score of 52.7% and a high recall score (82.5%) and low precision score (19.2%). I suspect that this is because I did not do any feature engineering on the data set and ultimately just ran it as is. In the future, I would dig deeper into the data set to perform feature engineering.
+As you can see, my model has a low accuracy score of 52.7% and a high recall score (82.5%) and low precision score (19.2%). I suspect that this is because I did not do any feature engineering on the data set and ultimately just ran the data set as is. In the future, I would dig deeper into the data set to perform feature engineering.
 
 **Code used to make prediction:**
 ```
@@ -211,6 +211,7 @@ FROM ML.PREDICT(MODEL `spotify_track_data.bopflop_model`,
 ```
 
 To view more model information, you can run these queries:
+
 ```
 -- #### MODEL INFO ####
 -- Training info  
@@ -228,9 +229,9 @@ SELECT *
 FROM ML.WEIGHTS(MODEL `spotify_track_data.bopflop_model`)
 ```
 
-Another option is to run the dataset through AutoML. A benefit of using AutoML is that it lowers the cost of ownership (TCO) in a couple different ways, one way is that it automates feature engineering, which transforming data into features that better represent the underlying problem. AutoML also comes out-of-the-box with security and compliance built into it. It does take more time, money, and resources though to run AutoML, so that is something to keep in mind.
+Another option is to run the data set through AutoML. A benefit of using AutoML is that it lowers the cost of ownership (TCO) in a couple different ways, one way is that it automates feature engineering, which transforms the data into features that better represent the underlying problem. AutoML also comes out-of-the-box with security and compliance built into it. It does take more time, money, and resources though to run AutoML, so that is something to keep in mind.
 
-Since my training dataset had about 40,000 variables, I decided to run AutoML to see if I can build a better model.
+Since my training data set had about 40,000 variables, I decided to run AutoML to see if I can build a better model.
 
 **Code used to build model:**
 ```
@@ -246,7 +247,7 @@ FROM  `msds434-nd-final.spotify_track_data.track_tab`
 WHERE dataframe = 'training'
 ;
 ```
-The model took 1 hour and 34 minutes to run and cost about $7 to run [look into cost].
+The model took 1 hour and 34 minutes to complete and the resources cost about $12 to run.
 
 ![auto_ml_rt](images/automl1.PNG)
 
@@ -267,7 +268,7 @@ FROM ML.EVALUATE(MODEL `spotify_track_data.bopflop_AutoML`,
 **Output:**
 ![auto_ml_op](images/automl2.PNG)
 
-As you can see, the AutoML model performed much better than my original model with a 87.3% accuracy score, 57.6% precision score and 8.5% recall score. Needless to say, I will be using this model.
+As you can see, the AutoML model performed much better than my original model with an 87.3% accuracy score, 57.6% precision score and 8.5% recall score. Needless to say, I will be using this model.
 
 **Code used to make prediction:**
 ```
@@ -282,7 +283,7 @@ FROM ML.PREDICT(MODEL `spotify_track_data.bopflop_AutoML`,
 ```
 
 ### Step 6: Deploy frontend application
-To present my EDA findings and my model's success, I created a streamlit app and deployed it on GCP's Cloud Run. I used Visual Studio Code as my GUI, Docker as my environment container, and Google Cloud SDK to push my app from my local machine to my cloud environment.
+To present my EDA findings and my model's success, I created a [streamlit app](https://streamlit.io/) and deployed it on GCP's Cloud Run. I used Visual Studio Code as my integrated development environment (IDE), Docker as my environment container, and Google Cloud SDK to push my app from my local machine to my cloud environment.
 
 ![app1](images/app1.PNG)
 
@@ -291,21 +292,21 @@ Helpful resources:
 - [YouTube - How to Deploy Streamlit Apps to GCP App Engine](https://www.youtube.com/watch?v=03KgXhg-voY)
 
 ### Step 7: Setup monitoring dashboard
-GCP has a built-in  monitoring tool that allows you to build your own monitoring dashboard. You are also able to set up alerts to notify you if your application goes over a specific limit that you can set.
+GCP has a built-in monitoring tool that allows you to build your own monitoring dashboard. You are also able to set up alerts to notify you if your application goes over a specific limit that you can set.
 
-I created a simple dashboard to watch the CPU usage and count of request to my Spotify Tracks - Bop or Flop application. Overtime, I would build this out to also monitor BigQuery and my project's expenses.
+I created a simple dashboard to watch the CPU usage and count of request to my Spotify Tracks - Bop or Flop application. Overtime, I would build this out to also monitor BigQuery and my overall project's expenses.
 
 ![monitoring](images/monitoring1.PNG)
 
 ## Project Limitations
-Due to being on a student budget, I decided to errored on the side of caution of limiting my expenses, which affected our project’s performance. Please see 'Future Enhancements' for what we would want to do next to enhance what we have built.
+Because I was on a limited student budget, I opted to be cautious and restrict my spending, which had an impact on the project's performance. To learn about my plans for improving what I've created, please refer to the "Future Enhancements" section.
 
 ## Future Enhancements
-- Set up a weekly script to collect new Spotify tracks and append the data to the existing BigQuery table.
+- Setup a weekly script to collect new Spotify tracks and append the data to the existing BigQuery table.
 - Perform more in-depth feature engineering and tune the model for higher accuracy.
 - Use Spotify's API OAuth 2.0 authorization framework to allow users to pull their own Spotify data and see if my model can predict if their tracks are a bop or a flop.
-- Enhance the application to have more interactive graphs and present more useful insight.
-- Use GitHub Actions for continuous integration and continuous delivery (CI/CD).
+- Enhance the application to have more interactive graphs and present more useful insights.
+- Utilize GitHub Actions to facilitate continuous integration and continuous delivery (CI/CD).
 
 ## Repository Info
 Created by: [Nicholas Drake](https://github.com/DrakeData)
