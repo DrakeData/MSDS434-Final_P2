@@ -290,6 +290,7 @@ To present my EDA findings and my model's success, I created a [streamlit app](h
 
 Helpful resources:
 - [Install the Cloud Code for VS Code extension](https://cloud.google.com/code/docs/vscode/install)
+- [Install the gcloud CLI](https://cloud.google.com/sdk/docs/install)
 - [YouTube - How to Deploy Streamlit Apps to GCP App Engine](https://www.youtube.com/watch?v=03KgXhg-voY)
 
 ### Step 7: Setup monitoring dashboard
