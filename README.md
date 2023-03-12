@@ -266,6 +266,7 @@ FROM ML.EVALUATE(MODEL `spotify_track_data.bopflop_AutoML`,
 );
 ```
 **Output:**
+
 ![auto_ml_op](images/automl2.PNG)
 
 As you can see, the AutoML model performed much better than my original model with an 87.3% accuracy score, 57.6% precision score and 8.5% recall score. Needless to say, I will be using this model.
